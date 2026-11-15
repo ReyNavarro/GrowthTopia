@@ -33,7 +33,7 @@ if ($isComplete) {
         dcpStartSession();
         session_regenerate_id(true);
         $_SESSION['logout_complete'] = true;
-        flashSuccess('Thank you for using DataCorePoint. You have been logged out.');
+        flashSuccess('Thank you for using Growthtopia. You have been logged out.');
 
         header('Location: logout.php?done=1');
         exit;
@@ -54,7 +54,7 @@ if (!$isComplete && empty($_SESSION['csrf_token'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= $isComplete ? 'Thank you' : 'Confirm logout' ?> | DataCorePoint</title>
+    <title><?= $isComplete ? 'Thank you' : 'Confirm logout' ?> | Growthtopia</title>
     <script>
         try {
             if (localStorage.getItem('datacorepoint-theme') === 'dark') {
@@ -67,11 +67,12 @@ if (!$isComplete && empty($_SESSION['csrf_token'])) {
     <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="assets/css/datacore.css?v=<?= filemtime(__DIR__ . '/assets/css/datacore.css') ?>">
     <script defer src="assets/js/theme.js?v=<?= filemtime(__DIR__ . '/assets/js/theme.js') ?>"></script>
+    <script defer src="assets/js/form-validation.js?v=<?= filemtime(__DIR__ . '/assets/js/form-validation.js') ?>"></script>
     <style>
         .logout-card {
             position: relative;
@@ -98,8 +99,8 @@ if (!$isComplete && empty($_SESSION['csrf_token'])) {
         }
 
         .logout-title {
-            font-family: "Instrument Serif", Georgia, serif;
-            font-size: 2.6rem;
+            font-family: "Silkscreen", monospace;
+            font-size: 1.35rem;
             font-weight: 400;
         }
 
@@ -142,7 +143,7 @@ if (!$isComplete && empty($_SESSION['csrf_token'])) {
 
             <div class="login-logo"><?php renderBrandMark(); ?></div>
             <h1 class="logout-title mt-4 mb-2">
-                <?= $isComplete ? 'Thank you for using DataCorePoint.' : 'Are you sure?' ?>
+                <?= $isComplete ? 'Thank you for using Growthtopia.' : 'Are you sure?' ?>
             </h1>
 
             <?php if ($isComplete): ?>
@@ -167,7 +168,7 @@ if (!$isComplete && empty($_SESSION['csrf_token'])) {
                 </form>
             <?php endif; ?>
 
-            <p class="small text-muted mt-4 mb-0">DataCorePoint &mdash; Navarro, Rey Anderson D.</p>
+            <p class="small text-muted mt-4 mb-0">Growthtopia &mdash; Navarro, Rey Anderson D.</p>
         </section>
     </main>
 <?php if ($isComplete): ?>

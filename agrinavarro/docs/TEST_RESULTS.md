@@ -1,6 +1,16 @@
 # Verification record
 
-Updated 2026-11-12. This file separates checks already run from work that still needs human review or live write testing.
+Updated 2026-11-15. This file separates checks already run from work that still needs human review or live write testing.
+
+## Growthtopia rebrand preparation (v2.5.2)
+
+- Updated the visible application name, original pixel-inspired brand mark, favicon, display font, and color palette. The existing sign-in background video source and loop settings were left unchanged.
+- Updated the administrator user form presentation and replaced its browser delete prompt with an in-app confirmation dialog. Account permissions, deletion checks, database operations, and role behavior were left intact.
+- Added client-side feedback driven by each field's existing HTML validation constraints. Invalid or missing values receive red field/label text, an accessible message, and a brief shake; valid input clears the state.
+- Reworked project documentation and the ERD based on the supplied 3NF schema diagram. Sample personal details in the supplied normalization document were not copied.
+- PHP syntax checks passed for the nine changed PHP files; JavaScript syntax checks passed for the shared validation and theme scripts; `git diff --check` and relative links in the updated documentation passed.
+- No end-to-end account or database workflows were run for this preparation.
+- The previous Render URL `https://datacorepoint.onrender.com/login.php` returned HTTP 503 when checked on 2026-11-15.
 
 ## UI, records, and Render deployment update (v2.5)
 
@@ -62,7 +72,7 @@ Updated 2026-11-12. This file separates checks already run from work that still 
 - The lookup normalization migration and the 2026-11-06 sequence, farmer-date-default, and unread-notification migrations are applied to the connected Supabase project. A read-only audit confirmed zero ID sequences behind their table maximums, the farmer registration default is `CURRENT_DATE`, and the notification watermark column exists.
 - The reported live create failures were traced to sequences behind existing IDs and repaired. The planting delete handler was empty and has been implemented as a CSRF-protected archive action. Re-test create, edit, archive, restore, and permanent delete in the browser; no disposable record CRUD was run during this fix.
 - Screenshots of the visible modules have not been captured. Remove real farmer/contact details before saving screenshots in a public repository. The current live data dictionary is dated 2026-11-05 and must be regenerated after the schema migration before submission.
-- The `origin` remote now points to `https://github.com/ReyNavarro/DataCorePoint.git`; the current local changes have not been committed or pushed.
+- GitHub repository is now named `ReyNavarro/GrowthTopia`, and the local `origin` remote points to `https://github.com/ReyNavarro/GrowthTopia.git`. Current local changes have not been committed or pushed.
 - Rotate the database password if it was ever exposed outside the private local config, and update only the ignored local configuration.
 
 ## Suggested final demonstration checks

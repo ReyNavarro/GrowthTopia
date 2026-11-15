@@ -28,6 +28,7 @@
   </div>
 </div>
 <script defer src="<?= getBaseUrl() ? getBaseUrl() . '/assets/js/theme.js' : 'assets/js/theme.js' ?>?v=<?= filemtime(__DIR__ . '/../assets/js/theme.js') ?>"></script>
+<script defer src="<?= getBaseUrl() ? getBaseUrl() . '/assets/js/form-validation.js' : 'assets/js/form-validation.js' ?>?v=<?= filemtime(__DIR__ . '/../assets/js/form-validation.js') ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 // Show a skeleton immediately while same-site pages load.

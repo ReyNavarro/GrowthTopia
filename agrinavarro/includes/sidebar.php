@@ -30,9 +30,9 @@ if ($_sidebarInitials === '') $_sidebarInitials = 'U';
 <nav id="sidebar" class="premium-sidebar" aria-label="Main navigation">
   <div class="ps-inner">
     <!-- Brand -->
-    <a class="ps-brand" href="<?= $base ?>/index.php" title="DataCorePoint">
+    <a class="ps-brand" href="<?= $base ?>/index.php" title="Growthtopia">
       <span class="ps-brand-icon"><?php renderBrandMark(); ?></span>
-      <span class="ps-brand-label">DataCorePoint</span>
+      <span class="ps-brand-label">Growthtopia</span>
     </a>
 
     <!-- Navigation -->

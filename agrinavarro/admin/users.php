@@ -94,8 +94,122 @@ $users = $pdo->query('SELECT u.user_id,u.username,u.role_id,r.role_name FROM use
 $pageTitle = 'User management';
 require_once '../includes/header.php';
 ?>
-<?= displayFlash() ?><?php if ($error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-<div class="dashboard-heading"><div><h1>User management</h1><p>Create and maintain accounts and roles.</p></div></div>
-<div class="row g-3"><div class="col-lg-4"><div class="card"><div class="card-header bg-white fw-semibold"><?= $editing ? 'Edit account' : 'Add an account' ?></div><div class="card-body"><form method="post"><input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>"><input type="hidden" name="action" value="save"><input type="hidden" name="user_id" value="<?= (int)($editing['user_id'] ?? 0) ?>"><div class="mb-3"><label class="form-label" for="username">Username</label><input class="form-control" id="username" name="username" maxlength="100" value="<?= htmlspecialchars($editing['username'] ?? '') ?>" required></div><div class="mb-3"><label class="form-label" for="role_id">Role</label><select class="form-select" id="role_id" name="role_id" required><option value="" disabled hidden <?= $editing ? '' : 'selected' ?>>Choose a role…</option><?php foreach ($roles as $role): ?><option value="<?= (int)$role['role_id'] ?>" <?= (($editing['role_id'] ?? '') == $role['role_id']) ? 'selected' : '' ?>><?= htmlspecialchars($role['role_name']) ?></option><?php endforeach; ?></select></div><div class="mb-3"><label class="form-label" for="password"><?= $editing ? 'New password (leave blank to keep current)' : 'Password' ?></label><input class="form-control" id="password" name="password" type="password" <?= $editing ? '' : 'required' ?> autocomplete="new-password"></div><div class="d-flex gap-2"><button class="btn btn-success" type="submit"><?= $editing ? 'Save changes' : 'Create account' ?></button><?php if ($editing): ?><a href="users.php" class="btn btn-outline-secondary">Cancel</a><?php endif; ?></div></form></div></div></div>
-<div class="col-lg-8"><div class="card"><div class="card-header bg-white fw-semibold">Accounts</div><div class="card-body p-0 table-responsive"><table class="table table-hover align-middle mb-0"><thead class="table-light"><tr><th>ID</th><th>Username</th><th>Role</th><th>Actions</th></tr></thead><tbody><?php if (!$users): ?><tr><td colspan="4" class="text-center text-muted py-4">No user accounts found.</td></tr><?php else: foreach ($users as $user): ?><tr><td>#<?= (int)$user['user_id'] ?></td><td class="fw-semibold"><?= htmlspecialchars($user['username']) ?><?= (int)$user['user_id'] === (int)$_SESSION['user_id'] ? ' <span class="badge text-bg-light">You</span>' : '' ?></td><td><?= htmlspecialchars($user['role_name'] ?? 'Unassigned') ?></td><td><a class="btn btn-sm btn-outline-primary" href="?edit=<?= (int)$user['user_id'] ?>">Edit</a><?php if ((int)$user['user_id'] !== (int)$_SESSION['user_id']): ?><form method="post" class="d-inline" onsubmit="return confirm('Delete this account?')"><input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="user_id" value="<?= (int)$user['user_id'] ?>"><button class="btn btn-sm btn-outline-danger" type="submit">Delete</button></form><?php endif; ?></td></tr><?php endforeach; endif; ?></tbody></table></div></div></div></div>
+<?= displayFlash() ?>
+<?php if ($error !== ''): ?>
+    <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?>
+    </div>
+<?php endif; ?>
+<div class="dashboard-heading">
+    <div><h1>User management</h1><p>Create and maintain accounts and roles.</p></div>
+</div>
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header bg-white fw-semibold">
+                <i class="bi bi-person-plus me-2" aria-hidden="true"></i><?= $editing ? 'Edit account' : 'Add an account' ?>
+            </div>
+            <div class="card-body">
+                <form method="post" class="user-management-form">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>">
+                    <input type="hidden" name="action" value="save">
+                    <input type="hidden" name="user_id" value="<?= (int)($editing['user_id'] ?? 0) ?>">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="username">Username <span class="text-danger">*</span></label>
+                        <input class="form-control" id="username" name="username" maxlength="50" value="<?= htmlspecialchars($editing['username'] ?? '', ENT_QUOTES, 'UTF-8') ?>" autocomplete="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="role_id">Role <span class="text-danger">*</span></label>
+                        <select class="form-select" id="role_id" name="role_id" required>
+                            <option value="" disabled hidden <?= $editing ? '' : 'selected' ?>>Choose a role…</option>
+                            <?php foreach ($roles as $role): ?>
+                                <option value="<?= (int)$role['role_id'] ?>" <?= (($editing['role_id'] ?? '') == $role['role_id']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($role['role_name'], ENT_QUOTES, 'UTF-8') ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="password"><?= $editing ? 'New password' : 'Password' ?><?= $editing ? ' (optional)' : ' *' ?></label>
+                        <input class="form-control" id="password" name="password" type="password" <?= $editing ? '' : 'required' ?> autocomplete="new-password">
+                        <?php if ($editing): ?><div class="form-text">Leave blank to keep the current password.</div><?php endif; ?>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-success" type="submit">
+                            <i class="bi bi-check-lg me-1" aria-hidden="true"></i><?= $editing ? 'Save changes' : 'Create account' ?>
+                        </button>
+                        <?php if ($editing): ?><a href="users.php" class="btn btn-outline-secondary">Cancel</a><?php endif; ?>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <span class="fw-semibold"><i class="bi bi-people me-2" aria-hidden="true"></i>Accounts</span>
+                <span class="badge text-bg-light"><?= count($users) ?></span>
+            </div>
+            <div class="card-body p-0 table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light"><tr><th>ID</th><th>Username</th><th>Role</th><th>Actions</th></tr></thead>
+                    <tbody>
+                    <?php if (!$users): ?>
+                        <tr><td colspan="4" class="text-center text-muted py-4">No user accounts found.</td></tr>
+                    <?php else: foreach ($users as $user): ?>
+                        <tr>
+                            <td>#<?= (int)$user['user_id'] ?></td>
+                            <td class="fw-semibold">
+                                <?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>
+                                <?= (int)$user['user_id'] === (int)$_SESSION['user_id'] ? ' <span class="badge text-bg-light">You</span>' : '' ?>
+                            </td>
+                            <td><?= htmlspecialchars($user['role_name'] ?? 'Unassigned', ENT_QUOTES, 'UTF-8') ?></td>
+                            <td>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <a class="btn btn-sm btn-outline-primary" href="?edit=<?= (int)$user['user_id'] ?>">
+                                        <i class="bi bi-pencil-square me-1" aria-hidden="true"></i>Edit
+                                    </a>
+                                    <?php if ((int)$user['user_id'] !== (int)$_SESSION['user_id']): ?>
+                                        <button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-user-id="<?= (int)$user['user_id'] ?>" data-username="<?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>">
+                                            <i class="bi bi-trash me-1" aria-hidden="true"></i>Delete
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+            <h2 class="modal-title fs-5" id="deleteUserTitle"><i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>Delete account</h2>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            Permanently delete the account for <strong id="deleteUserName"></strong>?
+            Accounts with activity history cannot be deleted. This action cannot be undone.
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+            <form method="post">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="user_id" id="deleteUserId">
+                <button class="btn btn-danger" type="submit"><i class="bi bi-trash me-1" aria-hidden="true"></i>Delete account</button>
+            </form>
+        </div>
+    </div></div>
+</div>
+<script>
+document.getElementById('deleteUserModal').addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    document.getElementById('deleteUserName').textContent = button.dataset.username;
+    document.getElementById('deleteUserId').value = button.dataset.userId;
+});
+</script>
 <?php require_once '../includes/footer.php'; ?>

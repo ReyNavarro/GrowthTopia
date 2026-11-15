@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Sign in | DataCorePoint</title>
+    <title>Sign in | Growthtopia</title>
     <script>
         try {
             if (localStorage.getItem('datacorepoint-theme') === 'dark') {
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
     <script>
         tailwind = {
             config: {
@@ -81,16 +81,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 darkMode: "class",
                 theme: {
                     extend: {
-                        fontFamily: { sans: ["Inter", "sans-serif"], mono: ["JetBrains Mono", "monospace"] },
+                        fontFamily: { sans: ["Inter", "sans-serif"], mono: ["Silkscreen", "monospace"] },
                         colors: {
                             core: {
-                                50: "#eff6ff",
-                                100: "#dbeafe",
-                                400: "#60a5fa",
-                                500: "#3b82f6",
-                                600: "#2563eb",
-                                900: "#1e3a8a",
-                                950: "#172554"
+                                50: "#edffdd",
+                                100: "#d9f6be",
+                                400: "#83d055",
+                                500: "#4caf43",
+                                600: "#32843a",
+                                900: "#1b5b32",
+                                950: "#123d27"
                             }
                         }
                     }
@@ -103,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="assets/css/datacore.css?v=<?= filemtime(__DIR__ . '/assets/css/datacore.css') ?>">
     <script defer src="assets/js/theme.js?v=<?= filemtime(__DIR__ . '/assets/js/theme.js') ?>"></script>
+    <script defer src="assets/js/form-validation.js?v=<?= filemtime(__DIR__ . '/assets/js/form-validation.js') ?>"></script>
 </head>
 <body class="login-page">
     <video class="login-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
@@ -117,8 +118,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <section class="login-card tilt-card card border-0 p-4 p-sm-5">
             <div class="text-center mb-4">
                 <div class="login-logo"><?php renderBrandMark(); ?></div>
-                <h1 class="login-title mt-3 mb-1">DataCorePoint</h1>
-                <p class="text-muted small mb-0">Agricultural Operations Platform</p>
+                <h1 class="login-title mt-3 mb-1">Growthtopia</h1>
+                <p class="text-muted small mb-0">Agriculture Information System</p>
             </div>
             <?php if ($error): ?>
                 <div class="alert alert-danger d-flex align-items-center" role="alert">
@@ -151,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
                 </button>
             </form>
-            <p class="text-center text-muted small mt-4 mb-0">&copy; <?= date('Y') ?> DataCorePoint &mdash; Navarro, Rey Anderson BSIS 3-1</p>
+            <p class="text-center text-muted small mt-4 mb-0">&copy; <?= date('Y') ?> Growthtopia &mdash; Navarro, Rey Anderson BSIS 3-1</p>
         </section>
     </main>
 <script>
@@ -165,7 +166,7 @@ document.getElementById('loginForm').addEventListener('submit', function () {
   loadingOverlay.className = 'login-submitting-overlay';
   loadingOverlay.setAttribute('aria-live', 'polite');
   loadingOverlay.setAttribute('aria-busy', 'true');
-  loadingOverlay.innerHTML = '<section class="loading-panel"><div class="loading-emblem"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i></div><div class="loading-title">DataCorePoint</div><p class="loading-stage">Signing in and loading your dashboard…</p><div class="loading-track" role="progressbar" aria-label="Signing in"><div class="loading-progress is-loading"></div></div></section>';
+  loadingOverlay.innerHTML = '<section class="loading-panel"><div class="loading-emblem"><i class="bi bi-flower1" aria-hidden="true"></i></div><div class="loading-title">Growthtopia</div><p class="loading-stage">Growing your dashboard…</p><div class="loading-track" role="progressbar" aria-label="Signing in"><div class="loading-progress is-loading"></div></div></section>';
   document.querySelector('.login-card').appendChild(loadingOverlay);
 });
 </script>

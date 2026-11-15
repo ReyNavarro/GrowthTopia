@@ -1,70 +1,85 @@
-# DataCorePoint release notes
+# Growthtopia Release Notes
 
-DataCorePoint is a school project for demonstrating agricultural record management. Use a test database and non-sensitive data; this project is not intended for production use.
+Growthtopia is an educational Agriculture Information System. Use test data only; the application is not verified for production use.
 
-These notes distinguish GitHub releases (version tags) from the version currently shown by the application. Only **v2.1** and **v2.2** currently have Git tags. The application is being prepared as **v2.5.1**; v2.3, v2.4, v2.5, and v2.5.1 do not have Git tags and are not published GitHub releases.
+**v2.5.1** is the latest published GitHub Release. **v2.5.2** is being prepared locally and has not yet been committed or released.
+
+## v2.5.2 — prepared locally; not yet released
+
+### Added
+- Rebranded the application as Growthtopia with a new original pixel-inspired lock-and-sprout mark and favicon.
+- Added inline, accessible validation feedback for invalid or missing form values, including red field feedback and a brief shake animation.
+- Added print-oriented project documentation covering project objectives, functional requirements, the ERD, normalization, dictionary, relationships, and user instructions.
+- Added documented ERD relationships from the supplied normalized schema diagram.
+
+### Updated
+- Applied a pixel-inspired agricultural interface palette, block-style controls, and a readable pixel display font to headings and key controls.
+- Restyled the existing loading and navigation skeletons with soil, leaf, and crop colors while retaining their existing behavior.
+- Standardized administrator user edit and delete controls with the account-management layout and an in-app confirmation modal.
+- Updated project documentation and repository links for the GrowthTopia GitHub repository.
+- Kept the sign-in background video and application business workflows unchanged.
+
+### Verification
+- PHP syntax checks passed for the nine changed PHP files, and JavaScript syntax checks passed for the theme and form-validation scripts.
+- `git diff --check` and relative links in the updated documentation passed.
+- No browser, database, or full application workflow test has been run for this prepared version.
+
+## v2.5.1 — published GitHub Release
+
+### Added
+- Light and dark themes with a saved preference and a toggle on application, sign-in, and logout screens.
+- Page-transition and dashboard loading skeletons.
+- A live Philippines-time clock and Asia/Manila display formatting for activity timestamps.
+
+### Updated
+- Reduced dashboard loading delays and sidebar/navigation transitions.
+- Combined shared-header notification reads into one query.
+- Added manual GitHub Release instructions and a release-description template.
+
+### Verification
+- All 45 application PHP files passed `php -l`.
+- `git diff --check` passed.
+- The local dashboard theme toggle and persistence after page reload were checked.
+- The local sign-in page rendered with its theme toggle.
+- README relative links were checked.
+- Full CRUD workflow testing and Render deployment verification were not completed.
+
+## v2.5 — historical app label; no verified tag
+
+### Updated
+- Refreshed dashboard colors, card presentation, loading animation, and sidebar interactions.
+- Improved harvest sorting and aligned the table and live-search controls.
+- Replaced the archive permanent-delete browser prompt with an in-app confirmation and added checks for active child records.
+- Updated Docker/Apache deployment configuration and local setup documentation.
+
+### Added
+- A browser-tab favicon.
+
+## v2.4 — no verified tag
+
+No v2.4 Git tag or published release was found in the repository history.
+
+## v2.3 — no verified tag
+
+No v2.3 Git tag or published release was found in the repository history.
 
 ## v2.2 — tagged release
 
-**Updated**
-
+### Updated
 - Changed the application version label from v2.1 to v2.2.
-- Updated the root and application README version references and version/rollback instructions.
-- Added the unused bundled Start Bootstrap template folder to `.gitignore`.
+- Updated README version references and versioning/rollback instructions.
+- Added an unused bundled template folder to `.gitignore`.
 
-**Features:** No new application features were added in this release.
+No new application features were added in this release.
 
 ## v2.1 — tagged release
 
-First tagged version of the DataCorePoint school project.
+Initial tagged version of the Agriculture Information System.
 
-**Added**
-
+### Added
 - PHP and Supabase PostgreSQL application for managing farmers, farms, crops, plantings, and harvests.
-- Sign-in, role-based admin pages, dashboard summaries, search, and reports.
+- Sign-in, role-controlled administrator pages, dashboard summaries, search, and reports.
 - Archive and restore workflows, notifications, and administrator activity history.
 - Database reference tables, schema documentation, and setup instructions.
 
-## v2.3 — no GitHub release found
-
-There is no v2.3 Git tag or tracked release commit in this repository's history, so a separate list of v2.3 changes cannot be verified. Do not treat the version label or local snapshot as a published GitHub release.
-
-## v2.4 — no GitHub release found
-
-There is no v2.4 Git tag or tracked release commit in this repository's history, so a separate list of v2.4 changes cannot be verified. Do not treat the version label or local snapshot as a published GitHub release.
-
-## v2.5 — historical app label, not tagged
-
-The application version was updated to v2.5 in the code, but no v2.5 Git tag or GitHub release exists.
-
-**Updated**
-
-- Refreshed dashboard colors, card presentation, loading animation, and sidebar interactions.
-- Improved harvest sorting and kept table/live-search controls consistent.
-- Replaced the archive permanent-delete browser prompt with an in-app confirmation and added checks for active child records.
-- Updated the Docker/Apache deployment configuration and documentation. The later Render setup uses port 10000 and PHP 8.3 with `pdo_pgsql`.
-- Updated local XAMPP instructions and formatted shared/login page markup.
-
-**Added**
-
-- A DataCorePoint favicon for browser tabs.
-
-**Verification status:** XAMPP PHP 8.2.12 passed syntax checks for all 45 application PHP files; the local login page and favicon returned HTTP 200; and a read-only database connection check succeeded. Authenticated CRUD workflows have not been fully retested, and the Docker image and Render deployment have not been verified. A public Render test URL is not available until the service is deployed.
-
-## v2.5.1 — prepared locally, not tagged
-
-**Added**
-
-- Light and dark themes with a saved preference and a toggle on the application, sign-in, and logout screens.
-- Same-site page-transition skeletons and dashboard loading skeletons so navigation shows immediate progress.
-
-**Changed**
-
-- Reduced dashboard entrance and loading-overlay delays and shortened sidebar/navigation transitions.
-- Combined shared-header notification reads into one query.
-- Display a live Philippines-time clock and convert database UTC activity timestamps to Asia/Manila for display.
-- Added manual GitHub Release steps and a release-description template to the versioning guide.
-
-**Verification status:** All 45 application PHP files passed `php -l`; `git diff --check` passed; and the local dashboard theme toggle switched light/dark mode and retained the dark selection after a page reload. The local sign-in page rendered with its theme toggle. Full workflow testing and Render deployment remain outstanding. This version has not yet been committed, tagged, published, or deployed. Follow [the release workflow](agrinavarro/docs/VERSIONING.md) after review; GitHub Releases are created for finished versions, not every commit.
-
-For the next finished version after v2.5.1, use **v2.5.2**.
+For manual commit and release steps, see [the versioning guide](agrinavarro/docs/VERSIONING.md).

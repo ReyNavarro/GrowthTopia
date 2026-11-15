@@ -53,7 +53,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($pageTitle) ?> | DataCorePoint</title>
+    <title><?= htmlspecialchars($pageTitle) ?> | Growthtopia</title>
     <script>
         try {
             if (localStorage.getItem('datacorepoint-theme') === 'dark') {
@@ -66,7 +66,7 @@ try {
     <link rel="icon" type="image/svg+xml" href="<?= getBaseUrl() ? getBaseUrl() . '/assets/img/favicon.svg' : 'assets/img/favicon.svg' ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
     <script>
         tailwind = {
             config: {
@@ -74,16 +74,16 @@ try {
                 darkMode: "class",
                 theme: {
                     extend: {
-                        fontFamily: { sans: ["Inter", "sans-serif"], mono: ["JetBrains Mono", "monospace"] },
+                        fontFamily: { sans: ["Inter", "sans-serif"], mono: ["Silkscreen", "monospace"] },
                         colors: {
                             core: {
-                                50: "#eff6ff",
-                                100: "#dbeafe",
-                                400: "#60a5fa",
-                                500: "#3b82f6",
-                                600: "#2563eb",
-                                900: "#1e3a8a",
-                                950: "#172554"
+                                50: "#edffdd",
+                                100: "#d9f6be",
+                                400: "#83d055",
+                                500: "#4caf43",
+                                600: "#32843a",
+                                900: "#1b5b32",
+                                950: "#123d27"
                             }
                         }
                     }

@@ -62,7 +62,7 @@ require_once 'includes/header.php';
 <main class="loading-screen" id="loadingScreen" aria-live="polite" aria-busy="true">
   <section class="loading-panel dashboard-loading-panel">
     <div class="loading-emblem"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i></div>
-    <div class="loading-title">DataCorePoint</div>
+    <div class="loading-title">Growthtopia</div>
     <p class="loading-stage" id="loadingStage">Loading your dashboard and latest records…</p>
     <div class="loading-track" role="progressbar" aria-label="Loading dashboard">
       <div class="loading-progress is-loading"></div>

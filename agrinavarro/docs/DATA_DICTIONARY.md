@@ -1,215 +1,115 @@
-# Live Supabase Data Dictionary
+# Growthtopia Data Dictionary
 
-Generated from the connected Supabase PostgreSQL catalog on 2026-11-05. It predates the applied lookup-normalization migration and is not a current schema contract. Regenerate this metadata after the latest migrations before submission. This file contains no application rows or credentials.
+This logical data dictionary is based on the submitted normalized 3NF schema diagram and the SQL migration files in `supabase/migrations/`. It describes the intended application model; it is **not a newly generated live Supabase catalog export**. Confirm column types, nullability, defaults, and constraint names from the current database before final submission.
 
-## `activity_logs`
+## Core agricultural tables
 
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `log_id` | integer | No | `nextval('activity_logs_log_id_seq'::regclass)` |
-| `user_id` | integer | Yes | `-` |
-| `log_action` | text | No | `-` |
-| `created_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
+| Table | Field | Key | Meaning |
+|---|---|---|---|
+| `farmers` | `farmer_id` | PK | Unique farmer identifier. |
+|  | `first_name` |  | Farmer's first name. |
+|  | `last_name` |  | Farmer's last name. |
+|  | `contact_number` |  | Contact telephone number. |
+|  | `address` |  | Farmer's address. |
+|  | `date_registered` |  | Date the farmer was registered. |
+|  | `is_deleted` |  | Archive flag; archived rows are excluded from normal lists. |
+| `farms` | `farm_id` | PK | Unique farm identifier. |
+|  | `farmer_id` | FK | Owner reference to `farmers.farmer_id`. |
+|  | `farm_name` |  | Farm name. |
+|  | `location` |  | Farm location. |
+|  | `area_hectares` |  | Farm area in hectares. |
+|  | `soil_id` | FK | Soil classification reference to `soil_types.soil_id`. |
+|  | `irrigation_id` | FK | Irrigation reference to `irrigation_types.irrigation_id`. |
+|  | `is_deleted` |  | Archive flag. |
+| `crops` | `crop_id` | PK | Unique crop identifier. |
+|  | `crop_name` |  | Crop name. |
+|  | `variety` |  | Crop variety. |
+|  | `category_id` | FK | Category reference to `crop_categories.category_id`. |
+|  | `growing_period_days` |  | Expected growing period in days. |
+|  | `season_id` | FK, optional | Recommended season reference to `seasons.season_id`. |
+|  | `is_deleted` |  | Archive flag. |
+| `plantings` | `planting_id` | PK | Unique planting identifier. |
+|  | `farm_id` | FK | Farm reference to `farms.farm_id`. |
+|  | `crop_id` | FK | Crop reference to `crops.crop_id`. |
+|  | `planting_date` |  | Planting date. |
+|  | `area_planted` |  | Area used for this planting. |
+|  | `seed_quantity` |  | Quantity of seed used. |
+|  | `expected_harvest_date` |  | Expected harvest date. |
+|  | `status_id` | FK | Status reference to `planting_statuses.status_id`. |
+|  | `is_deleted` |  | Archive flag. |
+| `harvests` | `harvest_id` | PK | Unique harvest identifier. |
+|  | `planting_id` | FK | Source planting reference to `plantings.planting_id`. |
+|  | `harvest_date` |  | Date harvested. |
+|  | `quantity_kg` |  | Harvest amount in kilograms. |
+|  | `selling_price_per_kg` |  | Selling price for one kilogram. |
+|  | `grade_id` | FK | Quality reference to `quality_grades.grade_id`. |
+|  | `remark_id` | FK | Remark reference to `harvest_remarks.remark_id`. |
+|  | `is_deleted` |  | Archive flag. |
 
-## `system_settings`
+## Lookup tables
 
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `setting_id` | integer | No | `nextval('system_settings_setting_id_seq'::regclass)` |
-| `setting_key` | character varying(50) | No | `-` |
-| `setting_value` | text | No | `-` |
+| Table | Primary key | Description field | Used by |
+|---|---|---|---|
+| `soil_types` | `soil_id` | `soil_name` | `farms.soil_id` |
+| `irrigation_types` | `irrigation_id` | `irrigation_name` | `farms.irrigation_id` |
+| `crop_categories` | `category_id` | `category_name` | `crops.category_id` |
+| `seasons` | `season_id` | `season_name` | `crops.season_id` |
+| `planting_statuses` | `status_id` | `status_name` | `plantings.status_id` |
+| `quality_grades` | `grade_id` | `grade_name` | `harvests.grade_id` |
+| `harvest_remarks` | `remark_id` | `remark_description` | `harvests.remark_id` |
 
-## `users`
+The supplied sample schema/screenshots show values such as Loam, Clay, and Sandy Loam; Rainfed, Irrigated, and Drip Irrigation; Cereal, Vegetable, Fruit, Legume, and Root Crop; Wet Season, Dry Season, and Year Round; Growing and Harvested; Grade A/B/C; and harvest-quality remarks. These are sample values only—confirm the current rows in Supabase before presenting them as the live lists.
 
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `user_id` | integer | No | `nextval('users_user_id_seq'::regclass)` |
-| `username` | character varying(50) | No | `-` |
-| `password_hash` | character varying(255) | No | `-` |
-| `role_id` | integer | Yes | `-` |
+Lookup tables also have generated identifiers and may include `created_at` and `updated_at` audit timestamps.
 
-## `roles`
+## Account, audit, and settings tables
 
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `role_id` | integer | No | `nextval('roles_role_id_seq'::regclass)` |
-| `role_name` | character varying(50) | No | `-` |
+| Table | Field | Key | Meaning |
+|---|---|---|---|
+| `roles` | `role_id` | PK | Unique role identifier. |
+|  | `role_name` |  | Human-readable role name used for access control. |
+| `users` | `user_id` | PK | Unique account identifier. |
+|  | `username` | UK | Sign-in name; migration creates case-insensitive uniqueness. |
+|  | `password_hash` |  | Password hash; plaintext passwords must not be stored. |
+|  | `role_id` | FK | Role reference to `roles.role_id`. |
+|  | `last_notification_read_id` |  | Activity-log watermark for tracking read notifications. |
+| `activity_logs` | `log_id` | PK | Unique activity entry identifier. |
+|  | `user_id` | FK, nullable | Actor reference to `users.user_id`; historical/system records may have no actor. |
+|  | `log_action` |  | Description of the recorded action. |
+|  | `created_at` |  | Time the activity entry was recorded. |
+| `system_settings` | `setting_id` | PK | Unique setting identifier. |
+|  | `setting_key` |  | Setting name. |
+|  | `setting_value` |  | Setting value. |
 
-## `farmers`
+Main records and user accounts receive `created_at` and `updated_at` timestamps from the versioned migration. A database trigger updates `updated_at` on changes.
 
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `farmer_id` | integer | No | `nextval('farmers_farmer_id_seq'::regclass)` |
-| `first_name` | character varying(50) | No | `-` |
-| `last_name` | character varying(50) | No | `-` |
-| `contact_number` | character varying(20) | No | `-` |
-| `address` | character varying(150) | No | `-` |
-| `date_registered` | date | No | `-` |
-| `is_deleted` | boolean | Yes | `false` |
+## Relationships
 
-## `farms`
+| Parent key | Referencing field | Cardinality |
+|---|---|---|
+| `farmers.farmer_id` | `farms.farmer_id` | One farmer to many farms |
+| `farms.farm_id` | `plantings.farm_id` | One farm to many plantings |
+| `crops.crop_id` | `plantings.crop_id` | One crop to many plantings |
+| `plantings.planting_id` | `harvests.planting_id` | One planting to many harvests |
+| Each lookup primary key | Matching `*_id` foreign key in its operational table | One lookup value to many records |
+| `roles.role_id` | `users.role_id` | One role to many users |
+| `users.user_id` | `activity_logs.user_id` | One user to many activity entries |
 
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `farm_id` | integer | No | `nextval('farms_farm_id_seq'::regclass)` |
-| `farmer_id` | integer | Yes | `-` |
-| `farm_name` | character varying(100) | No | `-` |
-| `location` | character varying(150) | No | `-` |
-| `area_hectares` | numeric(8,2) | No | `-` |
-| `soil_type` | character varying(50) | No | `-` |
-| `irrigation_type` | character varying(50) | No | `-` |
-| `soil_id` | integer | Yes | `-` |
-| `irrigation_id` | integer | Yes | `-` |
-| `is_deleted` | boolean | Yes | `false` |
+See the [ERD](ERD.md) for the complete relationship diagram.
 
-## `soil_types`
+## Constraints documented in migrations
 
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `soil_id` | integer | No | `nextval('soil_types_soil_id_seq'::regclass)` |
-| `soil_name` | character varying(50) | No | `-` |
-| `created_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-| `updated_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
+The lookup normalization migration makes required references non-null for `farms.farmer_id`, `farms.soil_id`, `farms.irrigation_id`, `crops.category_id`, `plantings.farm_id`, `plantings.crop_id`, `plantings.status_id`, `harvests.planting_id`, `harvests.grade_id`, `harvests.remark_id`, and `users.role_id`. `crops.season_id` is optional.
 
-## `irrigation_types`
+The same migration defines these checks:
 
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `irrigation_id` | integer | No | `nextval('irrigation_types_irrigation_id_seq'::regclass)` |
-| `irrigation_name` | character varying(50) | No | `-` |
-| `created_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-| `updated_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
+- `farms.area_hectares >= 0`
+- `crops.growing_period_days >= 0`
+- `plantings.area_planted >= 0`
+- `plantings.seed_quantity >= 0`
+- `plantings.expected_harvest_date >= plantings.planting_date`
+- `harvests.quantity_kg > 0`
+- `harvests.selling_price_per_kg >= 0`
+- Case-insensitive unique usernames via an index on `lower(username)`
 
-## `crops`
-
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `crop_id` | integer | No | `nextval('crops_crop_id_seq'::regclass)` |
-| `crop_name` | character varying(80) | No | `-` |
-| `variety` | character varying(80) | No | `-` |
-| `crop_category` | character varying(50) | No | `-` |
-| `growing_period_days` | integer | No | `-` |
-| `recommended_season` | character varying(30) | No | `-` |
-| `category_id` | integer | Yes | `-` |
-| `season_id` | integer | Yes | `-` |
-| `is_deleted` | boolean | Yes | `false` |
-
-## `crop_categories`
-
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `category_id` | integer | No | `nextval('crop_categories_category_id_seq'::regclass)` |
-| `category_name` | character varying(50) | No | `-` |
-| `created_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-| `updated_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-
-## `seasons`
-
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `season_id` | integer | No | `nextval('seasons_season_id_seq'::regclass)` |
-| `season_name` | character varying(30) | No | `-` |
-| `created_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-| `updated_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-
-## `plantings`
-
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `planting_id` | integer | No | `nextval('plantings_planting_id_seq'::regclass)` |
-| `farm_id` | integer | Yes | `-` |
-| `crop_id` | integer | Yes | `-` |
-| `planting_date` | date | No | `-` |
-| `area_planted` | numeric(8,2) | No | `-` |
-| `seed_quantity` | numeric(8,2) | No | `-` |
-| `expected_harvest_date` | date | No | `-` |
-| `status` | character varying(30) | No | `-` |
-| `status_id` | integer | Yes | `-` |
-| `is_deleted` | boolean | Yes | `false` |
-
-## `planting_statuses`
-
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `status_id` | integer | No | `nextval('planting_statuses_status_id_seq'::regclass)` |
-| `status_name` | character varying(30) | No | `-` |
-| `created_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-| `updated_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-
-## `harvests`
-
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `harvest_id` | integer | No | `nextval('harvests_harvest_id_seq'::regclass)` |
-| `planting_id` | integer | Yes | `-` |
-| `harvest_date` | date | No | `-` |
-| `quantity_kg` | numeric(10,2) | No | `-` |
-| `selling_price_per_kg` | numeric(10,2) | No | `-` |
-| `quality_grade` | character varying(30) | No | `-` |
-| `remarks` | character varying(200) | No | `-` |
-| `grade_id` | integer | Yes | `-` |
-| `remark_id` | integer | Yes | `-` |
-| `is_deleted` | boolean | Yes | `false` |
-
-## `quality_grades`
-
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `grade_id` | integer | No | `nextval('quality_grades_grade_id_seq'::regclass)` |
-| `grade_name` | character varying(30) | No | `-` |
-| `created_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-| `updated_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-
-## `harvest_remarks`
-
-| Column | PostgreSQL type | Nullable | Default |
-| --- | --- | --- | --- |
-| `remark_id` | integer | No | `nextval('harvest_remarks_remark_id_seq'::regclass)` |
-| `remark_description` | character varying(100) | No | `-` |
-| `created_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-| `updated_at` | timestamp without time zone | Yes | `CURRENT_TIMESTAMP` |
-
-## Constraints
-
-| Table | Name | Definition |
-| --- | --- | --- |
-| `activity_logs` | `activity_logs_user_id_fkey` | `FOREIGN KEY (user_id) REFERENCES users(user_id)` |
-| `activity_logs` | `activity_logs_pkey` | `PRIMARY KEY (log_id)` |
-| `crop_categories` | `crop_categories_pkey` | `PRIMARY KEY (category_id)` |
-| `crop_categories` | `crop_categories_category_name_key` | `UNIQUE (category_name)` |
-| `crops` | `crops_category_id_fkey` | `FOREIGN KEY (category_id) REFERENCES crop_categories(category_id)` |
-| `crops` | `crops_season_id_fkey` | `FOREIGN KEY (season_id) REFERENCES seasons(season_id)` |
-| `crops` | `crops_pkey` | `PRIMARY KEY (crop_id)` |
-| `farmers` | `farmers_pkey` | `PRIMARY KEY (farmer_id)` |
-| `farms` | `farms_farmer_id_fkey` | `FOREIGN KEY (farmer_id) REFERENCES farmers(farmer_id)` |
-| `farms` | `farms_irrigation_id_fkey` | `FOREIGN KEY (irrigation_id) REFERENCES irrigation_types(irrigation_id)` |
-| `farms` | `farms_soil_id_fkey` | `FOREIGN KEY (soil_id) REFERENCES soil_types(soil_id)` |
-| `farms` | `farms_pkey` | `PRIMARY KEY (farm_id)` |
-| `harvest_remarks` | `harvest_remarks_pkey` | `PRIMARY KEY (remark_id)` |
-| `harvest_remarks` | `harvest_remarks_remark_description_key` | `UNIQUE (remark_description)` |
-| `harvests` | `harvests_grade_id_fkey` | `FOREIGN KEY (grade_id) REFERENCES quality_grades(grade_id)` |
-| `harvests` | `harvests_planting_id_fkey` | `FOREIGN KEY (planting_id) REFERENCES plantings(planting_id)` |
-| `harvests` | `harvests_remark_id_fkey` | `FOREIGN KEY (remark_id) REFERENCES harvest_remarks(remark_id)` |
-| `harvests` | `harvests_pkey` | `PRIMARY KEY (harvest_id)` |
-| `irrigation_types` | `irrigation_types_pkey` | `PRIMARY KEY (irrigation_id)` |
-| `irrigation_types` | `irrigation_types_irrigation_name_key` | `UNIQUE (irrigation_name)` |
-| `planting_statuses` | `planting_statuses_pkey` | `PRIMARY KEY (status_id)` |
-| `planting_statuses` | `planting_statuses_status_name_key` | `UNIQUE (status_name)` |
-| `plantings` | `plantings_crop_id_fkey` | `FOREIGN KEY (crop_id) REFERENCES crops(crop_id)` |
-| `plantings` | `plantings_farm_id_fkey` | `FOREIGN KEY (farm_id) REFERENCES farms(farm_id)` |
-| `plantings` | `plantings_status_id_fkey` | `FOREIGN KEY (status_id) REFERENCES planting_statuses(status_id)` |
-| `plantings` | `plantings_pkey` | `PRIMARY KEY (planting_id)` |
-| `quality_grades` | `quality_grades_pkey` | `PRIMARY KEY (grade_id)` |
-| `quality_grades` | `quality_grades_grade_name_key` | `UNIQUE (grade_name)` |
-| `roles` | `roles_pkey` | `PRIMARY KEY (role_id)` |
-| `seasons` | `seasons_pkey` | `PRIMARY KEY (season_id)` |
-| `seasons` | `seasons_season_name_key` | `UNIQUE (season_name)` |
-| `soil_types` | `soil_types_pkey` | `PRIMARY KEY (soil_id)` |
-| `soil_types` | `soil_types_soil_name_key` | `UNIQUE (soil_name)` |
-| `system_settings` | `system_settings_pkey` | `PRIMARY KEY (setting_id)` |
-| `system_settings` | `system_settings_setting_key_key` | `UNIQUE (setting_key)` |
-| `users` | `users_role_id_fkey` | `FOREIGN KEY (role_id) REFERENCES roles(role_id)` |
-| `users` | `users_pkey` | `PRIMARY KEY (user_id)` |
-| `users` | `users_username_key` | `UNIQUE (username)` |
-
-Review this file after any schema migration. Supabase Row Level Security policies and grants are not represented by PostgreSQL table constraints and should be checked separately in the Supabase dashboard.
+The actual primary/foreign-key names and delete behavior should be read from the live catalog. Do not infer cascading deletion from this document.

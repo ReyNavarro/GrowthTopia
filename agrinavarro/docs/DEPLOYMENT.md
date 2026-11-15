@@ -5,7 +5,7 @@ The repository root contains a Dockerfile for the PHP application. It installs P
 ## Create the Render service
 
 1. Push the reviewed application commit to the GitHub branch you plan to deploy.
-2. In Render, create a **Web Service** and connect the `ReyNavarro/DataCorePoint` repository.
+2. In Render, create a **Web Service** and connect the `ReyNavarro/GrowthTopia` repository.
 3. Choose **Docker** as the runtime. Keep the repository root as the build context and use the root `Dockerfile`.
 4. Configure the service's environment variables. Set the database password as a secret:
 
@@ -23,9 +23,9 @@ The repository root contains a Dockerfile for the PHP application. It installs P
 ## Find the website and test it
 
 - **Local XAMPP test:** run the local-server command in the [application setup guide](../README.md), then open <http://127.0.0.1:8094/login.php>.
-- **Render test:** after the first successful deployment, open the Web Service in the Render Dashboard. Use the `onrender.com` service URL displayed there and append `/login.php` (for example, `https://your-service-name.onrender.com/login.php`). The example is not this project's live URL. Share the actual URL only after confirming the service is deployed and responds correctly.
+- **Render test:** open the Web Service in the Render Dashboard. The repository previously listed <https://datacorepoint.onrender.com/login.php>, but it returned HTTP 503 on 2026-11-15. Confirm the service status and use the current URL shown by Render; share it only after confirming the application responds correctly.
 
-The project is for school and demonstration purposes only. Do not use real or sensitive personal data. No live Render URL has been configured or verified yet.
+The project is for school and demonstration purposes only. Do not use real or sensitive personal data. The previous Render URL is not currently confirmed as available.
 
 Render's [web-service guide](https://render.com/docs/web-services) describes service setup and port requirements. Its [Docker guide](https://render.com/docs/docker) explains how Render builds a Dockerfile from a connected repository.
 

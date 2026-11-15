@@ -1,18 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="DataCorePoint logo">
-  <defs>
-    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
-      <stop offset="0%" stop-color="#eef8ff"/>
-      <stop offset="100%" stop-color="#dfeeff"/>
-    </linearGradient>
-  </defs>
-  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#bg)"/>
-  <circle cx="64" cy="64" r="42" fill="none" stroke="#d5ebff" stroke-width="3"/>
-  <g fill="none" stroke="#5aa9e6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M64 24v38M64 62L38 80M64 62l26 18M42 42l22 22m22-22L64 64M64 64v28m-14-14 14 14 14-14"/>
-    <circle cx="64" cy="64" r="9" fill="#5aa9e6" stroke="none"/>
-    <circle cx="64" cy="24" r="5" fill="#5aa9e6" stroke="none"/>
-    <circle cx="64" cy="92" r="5" fill="#5aa9e6" stroke="none"/>
-    <circle cx="38" cy="80" r="5" fill="#5aa9e6" stroke="none"/>
-    <circle cx="90" cy="80" r="5" fill="#5aa9e6" stroke="none"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Growthtopia logo" shape-rendering="crispEdges">
+  <rect x="2" y="2" width="44" height="44" rx="8" fill="#30a85a"/>
+  <path d="M13 21v-7a11 11 0 0 1 22 0v7h-5v-7a6 6 0 0 0-12 0v7z" fill="#a9632e" stroke="#57351e" stroke-width="2"/>
+  <path d="M7 18h34v26H7z" fill="#ffd52a" stroke="#a96316" stroke-width="3"/>
+  <path d="M10 21h28v3H10zm0 20h28v2H10z" fill="#fff1a0"/>
+  <path d="M24 25a4 4 0 0 0-2 7v7h4v-7a4 4 0 0 0-2-7z" fill="#a96316"/>
+  <path d="M23 23v-5h-5v-4h5v-4h4v4h5v4h-5v5zm-1-12c-5-1-7-4-7-7 5 0 8 2 9 6m2 0c1-5 4-7 8-7 0 5-2 8-7 9" fill="#55c934"/>
 </svg>
