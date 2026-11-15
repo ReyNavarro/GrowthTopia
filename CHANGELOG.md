@@ -2,13 +2,14 @@
 
 Growthtopia is an educational Agriculture Information System. Use test data only; the application is not verified for production use.
 
-**v2.5.1** is the latest published GitHub Release. **v2.5.2** is being prepared locally and has not yet been committed or released.
+**v2.5.1** is the latest published GitHub Release. **v2.5.2** is committed locally, but this checkout has no v2.5.2 tag.
 
-## v2.5.2 — prepared locally; not yet released
+## v2.5.2 — committed locally; no tag in this checkout
 
 ### Added
 - Rebranded the application as Growthtopia with a new original pixel-inspired lock-and-sprout mark and favicon.
 - Added inline, accessible validation feedback for invalid or missing form values, including red field feedback and a brief shake animation.
+- Added administrator-managed global add, edit, and delete permissions for non-admin accounts.
 - Added print-oriented project documentation covering project objectives, functional requirements, the ERD, normalization, dictionary, relationships, and user instructions.
 - Added documented ERD relationships from the supplied normalized schema diagram.
 
@@ -20,9 +21,8 @@ Growthtopia is an educational Agriculture Information System. Use test data only
 - Kept the sign-in background video and application business workflows unchanged.
 
 ### Verification
-- PHP syntax checks passed for the nine changed PHP files, and JavaScript syntax checks passed for the theme and form-validation scripts.
-- `git diff --check` and relative links in the updated documentation passed.
-- No browser, database, or full application workflow test has been run for this prepared version.
+- PHP syntax checks passed for all 27 changed PHP files, and `git diff --check` passed.
+- The permission migration and authenticated database workflows have not been tested against Supabase.
 
 ## v2.5.1 — published GitHub Release
 
@@ -81,5 +81,3 @@ Initial tagged version of the Agriculture Information System.
 - Sign-in, role-controlled administrator pages, dashboard summaries, search, and reports.
 - Archive and restore workflows, notifications, and administrator activity history.
 - Database reference tables, schema documentation, and setup instructions.
-
-For manual commit and release steps, see [the versioning guide](agrinavarro/docs/VERSIONING.md).

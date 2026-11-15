@@ -1,1 +1,5 @@
 e DataCorePoint v2.*
+
+# Keep formal project documents in this local checkout only.
+/agrinavarro/PROJECT_DOCUMENTATION.md
+/agrinavarro/docs/

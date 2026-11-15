@@ -49,7 +49,77 @@ function requireAdmin()
 
 function isAdmin()
 {
-    return isset($_SESSION['role_id']) && $_SESSION['role_id'] == 1;
+    static $adminStatusByUser = [];
+    if (!isset($_SESSION['user_id'])) {
+        return false;
+    }
+
+    $userId = (int)$_SESSION['user_id'];
+    if (array_key_exists($userId, $adminStatusByUser)) {
+        return $adminStatusByUser[$userId];
+    }
+
+    $stmt = getDB()->prepare('SELECT role_id FROM users WHERE user_id = ?');
+    $stmt->execute([$userId]);
+    $roleId = $stmt->fetchColumn();
+    if ($roleId === false) {
+        return $adminStatusByUser[$userId] = false;
+    }
+
+    $_SESSION['role_id'] = (int)$roleId;
+    return $adminStatusByUser[$userId] = ((int)$roleId === 1);
+}
+
+function currentUserActionPermissions(): array
+{
+    static $permissions = null;
+    if ($permissions !== null) {
+        return $permissions;
+    }
+
+    $permissions = ['add' => false, 'edit' => false, 'delete' => false];
+    if (!isset($_SESSION['user_id']) || isAdmin()) {
+        return $permissions;
+    }
+
+    $stmt = getDB()->prepare(
+        'SELECT CASE WHEN can_add THEN 1 ELSE 0 END AS can_add,
+                CASE WHEN can_edit THEN 1 ELSE 0 END AS can_edit,
+                CASE WHEN can_delete THEN 1 ELSE 0 END AS can_delete
+         FROM user_action_permissions
+         WHERE user_id = ?'
+    );
+    $stmt->execute([(int)$_SESSION['user_id']]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$row) {
+        error_log('Action permissions are missing for user #' . (int)$_SESSION['user_id']);
+        return $permissions;
+    }
+
+    return $permissions = [
+        'add' => (bool)$row['can_add'],
+        'edit' => (bool)$row['can_edit'],
+        'delete' => (bool)$row['can_delete'],
+    ];
+}
+
+function canPerformAction(string $action): bool
+{
+    if (!in_array($action, ['add', 'edit', 'delete'], true)) {
+        throw new InvalidArgumentException('Unknown user action permission.');
+    }
+
+    return isAdmin() || currentUserActionPermissions()[$action];
+}
+
+function requireActionPermission(string $action): void
+{
+    requireLogin();
+    if (!canPerformAction($action)) {
+        flashError('Your account does not have permission to ' . $action . ' records.');
+        header('Location: ' . getBaseUrl() . '/index.php');
+        exit;
+    }
 }
 
 function formatTimestampInManila(string $timestamp, string $format): string

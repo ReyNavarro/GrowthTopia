@@ -4,6 +4,8 @@ require_once __DIR__ . '/../includes/session.php';
 dcpStartSession();
 require_once '../includes/auth.php';
 requireLogin();
+$canEditRecords = canPerformAction('edit');
+$canDeleteRecords = canPerformAction('delete');
 require_once '../includes/db.php';
 $pdo = getDB();
 $search = trim($_GET['search'] ?? '');
@@ -33,6 +35,13 @@ if (empty($crops)) {
     echo '<tr><td colspan="7" class="text-center py-4 text-muted">No crops found.</td></tr>';
 } else {
     foreach ($crops as $c) {
-        echo '<tr><td class="text-muted small">#'.$c['crop_id'].'</td><td class="fw-semibold">'.htmlspecialchars($c['crop_name']).'</td><td>'.htmlspecialchars($c['variety'] ?? '—').'</td><td><span class="badge bg-warning text-dark">'.htmlspecialchars($c['category_name'] ?? '—').'</span></td><td>'.($c['growing_period_days'] !== null ? $c['growing_period_days'].' days' : '—').'</td><td>'.htmlspecialchars($c['season_name'] ?? '—').'</td><td class="text-center"><a href="edit.php?id='.$c['crop_id'].'" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a><a href="delete.php?id='.$c['crop_id'].'" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Delete?\')"><i class="bi bi-trash"></i></a></td></tr>';
+        echo '<tr><td class="text-muted small">#'.$c['crop_id'].'</td><td class="fw-semibold">'.htmlspecialchars($c['crop_name']).'</td><td>'.htmlspecialchars($c['variety'] ?? '—').'</td><td><span class="badge bg-warning text-dark">'.htmlspecialchars($c['category_name'] ?? '—').'</span></td><td>'.($c['growing_period_days'] !== null ? $c['growing_period_days'].' days' : '—').'</td><td>'.htmlspecialchars($c['season_name'] ?? '—').'</td><td class="text-center">';
+        if ($canEditRecords) {
+            echo '<a href="edit.php?id='.$c['crop_id'].'" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a>';
+        }
+        if ($canDeleteRecords) {
+            echo '<a href="delete.php?id='.$c['crop_id'].'" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Delete?\')"><i class="bi bi-trash"></i></a>';
+        }
+        echo '</td></tr>';
     }
 }

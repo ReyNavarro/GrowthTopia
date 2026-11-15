@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../includes/session.php';
 dcpStartSession();
 require_once __DIR__ . '/../includes/auth.php';
-requireLogin();
+requireActionPermission('delete');
 require_once __DIR__ . '/../includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

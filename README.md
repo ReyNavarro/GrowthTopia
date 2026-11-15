@@ -19,11 +19,9 @@
 - **Lookup data:** use reference tables for soil and irrigation types, crop categories, seasons, planting statuses, quality grades, and harvest remarks.
 - **Dashboard and reports:** review operational summaries, charts, recent activity, date-range reports, and printable reports.
 - **Record workflows:** search records, archive them, restore eligible records, and permanently delete archived items when relationships permit.
-- **Administration:** manage user accounts and roles, view recent notifications, and search activity logs.
+- **Administration:** manage accounts and roles, control staff add/edit/delete access, view notifications, and search activity logs.
 - **Interface:** persistent light/dark mode, a pixel-inspired agricultural theme, page loading skeletons, and Philippines-time display.
 - **Safeguards:** password hashing, role checks, CSRF protection on protected forms, database relationships, and account/record activity logging.
-
-Read the [project documentation](agrinavarro/PROJECT_DOCUMENTATION.md), [ERD](agrinavarro/docs/ERD.md), and [data dictionary](agrinavarro/docs/DATA_DICTIONARY.md) for the full system description and database reference.
 
 ## Technology
 
@@ -64,27 +62,14 @@ Read the [project documentation](agrinavarro/PROJECT_DOCUMENTATION.md), [ERD](ag
 
 4. Open [http://127.0.0.1:8094/login.php](http://127.0.0.1:8094/login.php). Keep the terminal open while using the app and press **Ctrl+C** to stop the server.
 
-The PHP development server is for local testing only; do not expose it directly to the internet. An existing database schema and sign-in account are required. The application does not automatically run SQL migrations.
+The PHP development server is for local testing only; do not expose it directly to the internet. An existing database schema and sign-in account are required. Before using user permissions, run `agrinavarro/supabase/migrations/20261115_user_action_permissions.sql` in the Supabase SQL Editor; migrations are not applied automatically.
 
 ## Deployment
 
 The repository includes a Dockerfile for Render using PHP 8.3, Apache, and `pdo_pgsql` on port `10000`. Configure database values and `APP_HTTPS` as private service environment variables; never commit secrets.
 
-The Render URL listed for the previous project name, <https://datacorepoint.onrender.com/login.php>, returned HTTP 503 when checked on 2026-11-15. It is not currently confirmed as an available demo. Follow the [deployment guide](agrinavarro/docs/DEPLOYMENT.md) to review the service and redeploy if needed.
-
-## Documentation
-
-- [Local setup and database configuration](agrinavarro/README.md)
-- [Project description, requirements, and user guide](agrinavarro/PROJECT_DOCUMENTATION.md)
-- [Entity-Relationship Diagram](agrinavarro/docs/ERD.md)
-- [Data dictionary and constraints](agrinavarro/docs/DATA_DICTIONARY.md)
-- [Normalization review](agrinavarro/docs/NORMALIZATION_REVIEW.md)
-- [Verification record and remaining checks](agrinavarro/docs/TEST_RESULTS.md)
-- [Render deployment and Supabase migrations](agrinavarro/docs/DEPLOYMENT.md)
-- [Versioning, releases, and rollback](agrinavarro/docs/VERSIONING.md)
-- [Release notes](CHANGELOG.md)
-- [Supabase migration scripts](agrinavarro/supabase/migrations/)
+The Render URL listed for the previous project name, <https://datacorepoint.onrender.com/login.php>, returned HTTP 503 when checked on 2026-11-15. It is not currently confirmed as an available demo. Check the Render Dashboard for the current service status before sharing a public link.
 
 ## Releases
 
-**v2.5.1** is the latest published release. **v2.5.2** contains the prepared Growthtopia rebrand, UI updates, and project documentation and is not yet committed or released. See [CHANGELOG.md](CHANGELOG.md) for release notes and [the versioning guide](agrinavarro/docs/VERSIONING.md) for the manual release process.
+**v2.5.1** is the latest published release. **v2.5.2** is committed locally, but this checkout has no v2.5.2 tag. See [CHANGELOG.md](CHANGELOG.md) for release notes.

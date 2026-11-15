@@ -2,7 +2,7 @@
 
 Growthtopia is a PHP Agriculture Information System for managing farmers, farms, crops, plantings, harvests, reports, and related administrative workflows. It uses Supabase PostgreSQL for application data.
 
-**Application version:** v2.5.2 — prepared locally; not yet released.
+**Application version:** v2.5.2 — committed locally; this checkout has no v2.5.2 tag.
 **Project use:** Educational and demonstration purposes. Use test data; the application is not verified for production use.
 
 For the feature overview and repository information, see the [main README](../README.md).
@@ -19,7 +19,7 @@ The application reads the `SUPABASE_DB_*` environment variables. For local devel
 
 Use SSL for the database connection. Keep credentials private: `includes/db.local.php` and real `.env` files must not be committed. Set deployment secrets through Render's private environment settings.
 
-The application does not automatically apply database migrations. SQL files under [`supabase/migrations/`](supabase/migrations/) document schema changes and must be reviewed and applied manually in Supabase when appropriate. Back up the database and verify migration status before applying changes.
+The application does not automatically apply database migrations. Apply `supabase/migrations/20261115_user_action_permissions.sql` in Supabase before using the per-user record permissions. Existing non-admin accounts start with add/edit access and no delete access; admin accounts always have full access. Apply other migration files only when needed for your database version, after backing up the database.
 
 ## Run locally on port 8094
 
@@ -44,7 +44,7 @@ The application requires a valid database configuration, schema, and existing ac
 - **Plantings:** connect crops and farms, and record planting details and status.
 - **Harvests:** record harvests against plantings, including date, quantity, price, grade, and remarks.
 - **Reports:** review date-range results and print reports from the browser.
-- **Users (administrators):** create and update accounts and assign roles.
+- **Users (administrators):** create and update accounts, assign roles, and control staff add/edit/delete access.
 - **Archived Records (administrators):** restore archived records or permanently delete eligible records.
 - **Activity Logs (administrators):** search account and record activity.
 - **Notifications:** view recent activity, with non-administrator access limited to the signed-in user's activity.
@@ -53,17 +53,6 @@ Record lists include live search; harvest records also support grade filtering a
 
 Archived farmers, farms, crops, plantings, and harvests remain in their original tables and are marked with `is_deleted`. Normal lists exclude archived rows. Administrators can restore eligible rows; permanent deletion may be blocked while related active records still reference them. Use disposable records when demonstrating these actions.
 
-## Project and database documentation
-
-- [Project description, requirements, normalization, and user guide](PROJECT_DOCUMENTATION.md)
-- [ERD and relationships](docs/ERD.md)
-- [Data dictionary and constraints](docs/DATA_DICTIONARY.md)
-- [Normalization review](docs/NORMALIZATION_REVIEW.md)
-- [Verification record and outstanding tests](docs/TEST_RESULTS.md)
-- [Render deployment and Supabase migration guidance](docs/DEPLOYMENT.md)
-- [Release notes](../CHANGELOG.md)
-- [Versioning and rollback guide](docs/VERSIONING.md)
-
 ## Deployment
 
-The repository root contains a Dockerfile for Render using PHP 8.3, Apache, and `pdo_pgsql` on port `10000`. Follow the [deployment guide](docs/DEPLOYMENT.md) to configure the service and private database environment variables. The previously listed public URL returned HTTP 503 on 2026-11-15; deployment readiness must be rechecked in Render.
+The repository root contains a Dockerfile for Render using PHP 8.3, Apache, and `pdo_pgsql` on port `10000`. Configure database connection values as private service environment variables. The previously listed public URL returned HTTP 503 on 2026-11-15; check the Render Dashboard before sharing a public link.

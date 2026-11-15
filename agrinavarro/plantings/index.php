@@ -3,6 +3,9 @@ require_once __DIR__ . '/../includes/session.php';
 dcpStartSession();
 require_once '../includes/auth.php';
 requireLogin();
+$canAddRecords = canPerformAction('add');
+$canEditRecords = canPerformAction('edit');
+$canDeleteRecords = canPerformAction('delete');
 require_once '../includes/db.php';
 
 $pdo = getDB();
@@ -59,7 +62,7 @@ require_once '../includes/header.php';
 <?= displayFlash() ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h6 class="mb-0 text-muted">Total: <strong><?= $totalRecords ?></strong> plantings</h6>
-  <a href="create.php" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Add Planting</a>
+  <?php if ($canAddRecords): ?><a href="create.php" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Add Planting</a><?php endif; ?>
 </div>
 <div class="card mb-3"><div class="card-body">
   <form method="get" class="row g-2 align-items-end">
@@ -96,8 +99,8 @@ require_once '../includes/header.php';
       <td><?= htmlspecialchars($p['expected_harvest_date'] ?? '—') ?></td>
       <td><span class="badge bg-<?= $bc ?>"><?= htmlspecialchars($p['status_name']) ?></span></td>
       <td class="text-center">
-        <a href="edit.php?id=<?= $p['planting_id'] ?>" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a>
-        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $p['planting_id'] ?>" data-name="<?= htmlspecialchars($p['crop_name'].' @ '.$p['farm_name']) ?>"><i class="bi bi-trash"></i></button>
+        <?php if ($canEditRecords): ?><a href="edit.php?id=<?= $p['planting_id'] ?>" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a><?php endif; ?>
+        <?php if ($canDeleteRecords): ?><button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $p['planting_id'] ?>" data-name="<?= htmlspecialchars($p['crop_name'].' @ '.$p['farm_name']) ?>"><i class="bi bi-trash"></i></button><?php endif; ?>
       </td>
     </tr>
     <?php endforeach;endif; ?>

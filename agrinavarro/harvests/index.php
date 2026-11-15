@@ -3,6 +3,9 @@ require_once __DIR__ . '/../includes/session.php';
 dcpStartSession();
 require_once '../includes/auth.php';
 requireLogin();
+$canAddRecords = canPerformAction('add');
+$canEditRecords = canPerformAction('edit');
+$canDeleteRecords = canPerformAction('delete');
 require_once '../includes/db.php';
 
 $pdo = getDB();
@@ -58,7 +61,7 @@ require_once '../includes/header.php';
         <h1 class="h4 mb-1">Harvest records</h1>
         <p class="text-muted small mb-0">Yield and quality recorded for each planting.</p>
     </div>
-    <a href="create.php" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Record harvest</a>
+    <?php if ($canAddRecords): ?><a href="create.php" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Record harvest</a><?php endif; ?>
 </div>
 
 <form method="get" class="card mb-3">
@@ -102,8 +105,8 @@ require_once '../includes/header.php';
                     <td><?= htmlspecialchars($harvest['grade_name'] ?? '—') ?></td>
                     <td><?= htmlspecialchars($harvest['remark_description'] ?? 'No remarks yet') ?></td>
                     <td class="text-center">
-                        <a href="edit.php?id=<?= $id ?>" class="btn btn-sm btn-outline-warning me-1" aria-label="Edit harvest #<?= $id ?>" title="Edit"><i class="bi bi-pencil" aria-hidden="true"></i></a>
-                        <button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $id ?>" data-name="<?= htmlspecialchars(($harvest['crop_name'] ?? 'Harvest') . ' — ' . ($harvest['farm_name'] ?? 'Farm'), ENT_QUOTES, 'UTF-8') ?>" aria-label="Delete harvest #<?= $id ?>" title="Delete"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                        <?php if ($canEditRecords): ?><a href="edit.php?id=<?= $id ?>" class="btn btn-sm btn-outline-warning me-1" aria-label="Edit harvest #<?= $id ?>" title="Edit"><i class="bi bi-pencil" aria-hidden="true"></i></a><?php endif; ?>
+                        <?php if ($canDeleteRecords): ?><button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $id ?>" data-name="<?= htmlspecialchars(($harvest['crop_name'] ?? 'Harvest') . ' — ' . ($harvest['farm_name'] ?? 'Farm'), ENT_QUOTES, 'UTF-8') ?>" aria-label="Delete harvest #<?= $id ?>" title="Delete"><i class="bi bi-trash" aria-hidden="true"></i></button><?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; endif; ?>

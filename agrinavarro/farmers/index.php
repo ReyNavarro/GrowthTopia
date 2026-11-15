@@ -3,6 +3,9 @@ require_once __DIR__ . '/../includes/session.php';
 dcpStartSession();
 require_once '../includes/auth.php';
 requireLogin();
+$canAddRecords = canPerformAction('add');
+$canEditRecords = canPerformAction('edit');
+$canDeleteRecords = canPerformAction('delete');
 require_once '../includes/db.php';
 
 $pdo = getDB();
@@ -57,7 +60,7 @@ require_once '../includes/header.php';
 <?= displayFlash() ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h6 class="mb-0 text-muted">Total: <strong><?= $totalRecords ?></strong> farmers</h6>
-  <a href="create.php" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Add Farmer</a>
+  <?php if ($canAddRecords): ?><a href="create.php" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Add Farmer</a><?php endif; ?>
 </div>
 
 <!-- Search & Filter -->
@@ -117,10 +120,10 @@ require_once '../includes/header.php';
               data-address="<?= htmlspecialchars($f['address'] ?? '') ?>"
               <i class="bi bi-eye"></i>
             </button>
-            <a href="edit.php?id=<?= $f['farmer_id'] ?>" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a>
-            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $f['farmer_id'] ?>" data-name="<?= htmlspecialchars($f['first_name'].' '.$f['last_name']) ?>">
+            <?php if ($canEditRecords): ?><a href="edit.php?id=<?= $f['farmer_id'] ?>" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a><?php endif; ?>
+            <?php if ($canDeleteRecords): ?><button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<?= $f['farmer_id'] ?>" data-name="<?= htmlspecialchars($f['first_name'].' '.$f['last_name']) ?>">
               <i class="bi bi-trash"></i>
-            </button>
+            </button><?php endif; ?>
           </td>
         </tr>
         <?php endforeach; endif; ?>

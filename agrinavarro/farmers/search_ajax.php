@@ -4,6 +4,8 @@ require_once __DIR__ . '/../includes/session.php';
 dcpStartSession();
 require_once '../includes/auth.php';
 requireLogin();
+$canEditRecords = canPerformAction('edit');
+$canDeleteRecords = canPerformAction('delete');
 require_once '../includes/db.php';
 
 $pdo = getDB();
@@ -39,8 +41,12 @@ if (empty($farmers)) {
         echo '<td>' . htmlspecialchars($f['contact_number'] ?? '—') . '</td>';
         echo '<td>' . htmlspecialchars($f['address'] ?? '—') . '</td>';
         echo '<td class="text-center">';
-        echo '<a href="edit.php?id=' . $f['farmer_id'] . '" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a>';
-        echo '<a href="delete.php?id=' . $f['farmer_id'] . '" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Delete this farmer?\')"><i class="bi bi-trash"></i></a>';
+        if ($canEditRecords) {
+            echo '<a href="edit.php?id=' . $f['farmer_id'] . '" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a>';
+        }
+        if ($canDeleteRecords) {
+            echo '<a href="delete.php?id=' . $f['farmer_id'] . '" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Delete this farmer?\')"><i class="bi bi-trash"></i></a>';
+        }
         echo '</td>';
         echo '</tr>';
     }

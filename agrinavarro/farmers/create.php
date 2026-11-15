@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../includes/session.php';
 dcpStartSession();
 require_once '../includes/auth.php';
-requireLogin();
+requireActionPermission('add');
 require_once '../includes/db.php';
 $pdo = getDB();
 $nameSuggestions = $pdo->query(

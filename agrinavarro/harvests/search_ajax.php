@@ -3,6 +3,8 @@ require_once __DIR__ . '/../includes/session.php';
 dcpStartSession();
 require_once '../includes/auth.php';
 requireLogin();
+$canEditRecords = canPerformAction('edit');
+$canDeleteRecords = canPerformAction('delete');
 require_once '../includes/db.php';
 
 $pdo = getDB();
@@ -52,5 +54,12 @@ foreach ($harvests as $harvest) {
     $grade = htmlspecialchars($harvest['grade_name'] ?? '—', ENT_QUOTES, 'UTF-8');
     $remark = htmlspecialchars($harvest['remark_description'] ?? 'No remarks yet', ENT_QUOTES, 'UTF-8');
     $name = htmlspecialchars(($harvest['crop_name'] ?? 'Harvest') . ' — ' . ($harvest['farm_name'] ?? 'Farm'), ENT_QUOTES, 'UTF-8');
-    echo '<tr><td class="text-muted small">#' . $id . '</td><td class="fw-semibold">' . $crop . '<br><small class="text-muted">' . $farm . '</small></td><td>' . $date . '</td><td>' . $quantity . '</td><td>' . $price . '</td><td>' . $grade . '</td><td>' . $remark . '</td><td class="text-center"><a href="edit.php?id=' . $id . '" class="btn btn-sm btn-outline-warning me-1" aria-label="Edit harvest #' . $id . '" title="Edit"><i class="bi bi-pencil" aria-hidden="true"></i></a><button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="' . $id . '" data-name="' . $name . '" aria-label="Delete harvest #' . $id . '" title="Delete"><i class="bi bi-trash" aria-hidden="true"></i></button></td></tr>';
+    echo '<tr><td class="text-muted small">#' . $id . '</td><td class="fw-semibold">' . $crop . '<br><small class="text-muted">' . $farm . '</small></td><td>' . $date . '</td><td>' . $quantity . '</td><td>' . $price . '</td><td>' . $grade . '</td><td>' . $remark . '</td><td class="text-center">';
+    if ($canEditRecords) {
+        echo '<a href="edit.php?id=' . $id . '" class="btn btn-sm btn-outline-warning me-1" aria-label="Edit harvest #' . $id . '" title="Edit"><i class="bi bi-pencil" aria-hidden="true"></i></a>';
+    }
+    if ($canDeleteRecords) {
+        echo '<button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="' . $id . '" data-name="' . $name . '" aria-label="Delete harvest #' . $id . '" title="Delete"><i class="bi bi-trash" aria-hidden="true"></i></button>';
+    }
+    echo '</td></tr>';
 }

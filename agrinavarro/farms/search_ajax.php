@@ -4,6 +4,8 @@ require_once __DIR__ . '/../includes/session.php';
 dcpStartSession();
 require_once '../includes/auth.php';
 requireLogin();
+$canEditRecords = canPerformAction('edit');
+$canDeleteRecords = canPerformAction('delete');
 require_once '../includes/db.php';
 
 $pdo = getDB();
@@ -45,6 +47,13 @@ if (empty($farms)) {
         echo '<td>' . ($f['area_hectares'] !== null ? number_format($f['area_hectares'], 2) : '—') . '</td>';
         echo '<td>' . htmlspecialchars($f['soil_name'] ?? '—') . '</td>';
         echo '<td>' . htmlspecialchars($f['irrigation_name'] ?? '—') . '</td>';
-        echo '<td class="text-center"><a href="edit.php?id='.$f['farm_id'].'" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a><a href="delete.php?id='.$f['farm_id'].'" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Delete?\')"><i class="bi bi-trash"></i></a></td></tr>';
+        echo '<td class="text-center">';
+        if ($canEditRecords) {
+            echo '<a href="edit.php?id='.$f['farm_id'].'" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a>';
+        }
+        if ($canDeleteRecords) {
+            echo '<a href="delete.php?id='.$f['farm_id'].'" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Delete?\')"><i class="bi bi-trash"></i></a>';
+        }
+        echo '</td></tr>';
     }
 }

@@ -3,7 +3,7 @@ require_once __DIR__ . '/../includes/session.php';
 dcpStartSession();
 
 require_once '../includes/auth.php';
-requireLogin();
+requireActionPermission('edit');
 require_once '../includes/db.php';
 
 $pdo = getDB();

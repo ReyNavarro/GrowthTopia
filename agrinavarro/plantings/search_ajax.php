@@ -4,6 +4,8 @@ require_once __DIR__ . '/../includes/session.php';
 dcpStartSession();
 require_once '../includes/auth.php';
 requireLogin();
+$canEditRecords = canPerformAction('edit');
+$canDeleteRecords = canPerformAction('delete');
 require_once '../includes/db.php';
 $pdo = getDB();
 $search = trim($_GET['search'] ?? '');
@@ -40,5 +42,12 @@ foreach ($rows as $p) {
     $status = htmlspecialchars($p['status_name'], ENT_QUOTES, 'UTF-8');
     $color = $colors[$p['status_name']] ?? 'secondary';
     $name = htmlspecialchars($p['crop_name'].' @ '.$p['farm_name'], ENT_QUOTES, 'UTF-8');
-    echo "<tr><td class=\"text-muted small\">#$id</td><td class=\"fw-semibold\">$farm<br><small class=\"text-muted\">$location</small></td><td>$crop</td><td>$date</td><td>$area</td><td>$seed</td><td>$expected</td><td><span class=\"badge bg-$color\">$status</span></td><td class=\"text-center\"><a href=\"edit.php?id=$id\" class=\"btn btn-sm btn-outline-warning me-1\"><i class=\"bi bi-pencil\"></i></a><button class=\"btn btn-sm btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#deleteModal\" data-id=\"$id\" data-name=\"$name\"><i class=\"bi bi-trash\"></i></button></td></tr>";
+    echo "<tr><td class=\"text-muted small\">#$id</td><td class=\"fw-semibold\">$farm<br><small class=\"text-muted\">$location</small></td><td>$crop</td><td>$date</td><td>$area</td><td>$seed</td><td>$expected</td><td><span class=\"badge bg-$color\">$status</span></td><td class=\"text-center\">";
+    if ($canEditRecords) {
+        echo "<a href=\"edit.php?id=$id\" class=\"btn btn-sm btn-outline-warning me-1\"><i class=\"bi bi-pencil\"></i></a>";
+    }
+    if ($canDeleteRecords) {
+        echo "<button class=\"btn btn-sm btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#deleteModal\" data-id=\"$id\" data-name=\"$name\"><i class=\"bi bi-trash\"></i></button>";
+    }
+    echo '</td></tr>';
 }
