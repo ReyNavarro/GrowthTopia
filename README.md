@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| Current app version | **v2.5.2** — prepared locally; not yet released |
-| Latest published release | **v2.5.1** |
+| Current app version | **v2.5.2** — released |
+| Latest published release | **v2.5.2** |
 | GitHub repository | [ReyNavarro/GrowthTopia](https://github.com/ReyNavarro/GrowthTopia) |
 | Project use | Educational and demonstration purposes |
 
@@ -72,4 +72,4 @@ The Render URL listed for the previous project name, <https://datacorepoint.onre
 
 ## Releases
 
-**v2.5.1** is the latest published release. **v2.5.2** is committed locally, but this checkout has no v2.5.2 tag. See [CHANGELOG.md](CHANGELOG.md) for release notes.
+**v2.5.2** is the latest published release.
