@@ -23,19 +23,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data['soil_id']        = (int)($_POST['soil_id'] ?? 0);
     $data['irrigation_id']  = (int)($_POST['irrigation_id'] ?? 0);
 
-    if (!$data['farmer_id']) {
+   if (!$data['farmer_id']) {
         $errors[] = 'Please select a farmer.';
     }
     if ($data['farm_name'] === '') {
         $errors[] = 'Farm name is required.';
+    } elseif (preg_match('/[<>]/', $data['farm_name'])) {
+        $errors[] = 'Farm name cannot contain HTML tags or special characters like < or >.';
     }
     if ($data['location'] === '') {
         $errors[] = 'Location is required.';
+    } elseif (preg_match('/[<>]/', $data['location'])) {
+        $errors[] = 'Location cannot contain HTML tags or special characters like < or >.';
     }
     if ($data['area_hectares'] !== '' && (!is_numeric($data['area_hectares']) || $data['area_hectares'] < 0)) {
         $errors[] = 'Area must be a positive number.';
     }
-
     if (empty($errors)) {
         $soilCheck = $pdo->prepare('SELECT soil_id FROM soil_types WHERE soil_id = ?');
         $soilCheck->execute([$data['soil_id']]);
